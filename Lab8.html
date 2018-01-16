@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #gameFrame{ width: 470px; height: 470px; margin: auto; border: black solid 5px; background-color: white; padding: 5px }
+            body { background-color: lightgray}
+        </style>
+        <script>
+            function createElements(){
+                var myFrame = document.createElement('div')
+                myFrame.id = 'gameFrame'
+                
+                for(let i = 0; i < 3; i++){
+                    var myrow = document.createElement('row')
+                    for (let j = 0; j < 3; j++){
+                        var myImg = document.createElement('img')
+                        myImg.src = "Numbers/"+((i*3)+j+1)+".png"
+                        myImg.width = 150
+                        myImg.id = j+1
+                        myImg.onclick = select
+                        myrow.appendChild(myImg)
+                    }
+                    myFrame.appendChild(myrow)
+                }
+                
+                /*var myrow1 = document.createElement('row')
+                var myrow2 = document.createElement('row')
+                var myrow3 = document.createElement('row')
+                
+                
+                var myImg1 = document.createElement('img')
+                myImg1.id = '1'
+                myImg1.src = "Numbers/1.png"
+                myImg1.width = 150
+                myrow1.appendChild(myImg1)
+                
+                var myImg2 = document.createElement('img')
+                myImg1.id = '2'
+                myImg2.src = "Numbers/2.png"
+                myImg2.width = 150
+                myrow1.appendChild(myImg2)
+                
+                var myImg3 = document.createElement('img')
+                myImg1.id = '3'
+                myImg3.src = "Numbers/3.png"
+                myImg3.width = 150
+                myrow1.appendChild(myImg3)
+                
+                var myImg4 = document.createElement('img')
+                myImg1.id = '1'
+                myImg4.src = "Numbers/4.png"
+                myImg4.width = 150
+                myrow2.appendChild(myImg4)
+                
+                var myImg5 = document.createElement('img')
+                myImg1.id = '2'
+                myImg5.src = "Numbers/5.png"
+                myImg5.width = 150
+                myrow2.appendChild(myImg5)
+                
+                var myImg6 = document.createElement('img')
+                myImg1.id = '3'
+                myImg6.src = "Numbers/6.png"
+                myImg6.width = 150
+                myrow2.appendChild(myImg6)
+                
+                var myImg7 = document.createElement('img')
+                myImg1.id = '1'
+                myImg7.src = "Numbers/7.png"
+                myImg7.width = 150
+                myrow3.appendChild(myImg7)
+                
+                var myImg8 = document.createElement('img')
+                myImg1.id = '2'
+                myImg8.src = "Numbers/8.png"
+                myImg8.width = 150
+                myrow3.appendChild(myImg8)
+                
+                var myImg9 = document.createElement('img')
+                myImg1.id = '3'
+                myImg9.src = "Numbers/9.png"
+                myImg9.width = 150
+                myrow3.appendChild(myImg9)
+                
+                myFrame.appendChild(myrow1)
+                myFrame.appendChild(myrow2)
+                myFrame.appendChild(myrow3)*/
+                document.body.appendChild(myFrame)
+            }
+            
+            function select(){
+                var selected = document.getElementById('selected')
+                if (selected != null){
+                    selected.id= null
+                }
+                this.id = 'selected'
+                alert(this)
+            }
+            
+            function moveDown(){
+                var selected = document.getElementsById('selected')
+                if(selected!=null){
+                    if(selected.parentNode.nextSibling != null){
+                        var altBox = selected.parentNode.nextSibling.getElementById(column)
+                        var nextToAltBox = altBox.nextSibling
+                        selected.parentnode.insertBefore(selected, altBox)
+                        selected.parentNode.nextSibling.insertBefore(nextToAltBox, selected)
+                        selected.id = null
+                    }else{
+                        window.alert("You can not move down the block.")
+                    }
+                }else {
+                    window.alert("Select a block first, please.")
+                }
+            }
+            
+            function init() {
+                
+                createElements()
+                onkeydown = moveDown
+
+            }
+            
+            onload = init
+            
+        </script>
+    </head>
+    <body>
+    </body>
+</html>
