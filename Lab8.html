@@ -4,6 +4,7 @@
         <style>
             #gameFrame{ width: 470px; height: 470px; margin: auto; border: black solid 5px; background-color: white; padding: 5px }
             body { background-color: lightgray}
+            #selected {border-radius: 50%; box-shadow: 0px 0px 30px}
         </style>
         <script>
             function createElements(){
@@ -16,6 +17,7 @@
                         var myImg = document.createElement('img')
                         myImg.src = "Numbers/"+((i*3)+j+1)+".png"
                         myImg.width = 150
+                        myImg.name = (i*3) + j+1
                         myImg.id = j+1
                         myImg.onclick = select
                         myrow.appendChild(myImg)
@@ -91,21 +93,34 @@
             function select(){
                 var selected = document.getElementById('selected')
                 if (selected != null){
-                    selected.id= null
+                    nextElement = selected.nextSibling
+                    if (nextElement == null){
+                        previousElement = selected.previousSibling
+                        selected.id = parseInt(previousElement.id ) + 1
+                    } else {
+                        selected.id = parseInt(nextElement.id ) - 1
+                    }
+                    if (this.name != selected.name) {
+                    this.id = 'selected'
+                    }
+                } else {
+                    this.id = 'selected'
                 }
-                this.id = 'selected'
-                alert(this)
             }
             
             function moveDown(){
-                var selected = document.getElementsById('selected')
+                var selected = document.getElementById('selected')
                 if(selected!=null){
                     if(selected.parentNode.nextSibling != null){
-                        var altBox = selected.parentNode.nextSibling.getElementById(column)
-                        var nextToAltBox = altBox.nextSibling
-                        selected.parentnode.insertBefore(selected, altBox)
-                        selected.parentNode.nextSibling.insertBefore(nextToAltBox, selected)
-                        selected.id = null
+                        
+                        var nextRow = selected.parentNode.nextSibling
+                        
+                        var altBox = 
+                        document.nextRow.getElementById(this.id)
+                        selected.parentnode.replaceChild(selected, altBox)
+                     
+                       altBox.parentNode.replaceChild(altBox, selected) 
+                        
                     }else{
                         window.alert("You can not move down the block.")
                     }
