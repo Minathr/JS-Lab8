@@ -4,9 +4,11 @@
         <style>
             #gameFrame{ width: 470px; height: 470px; margin: auto; border: black solid 5px; background-color: white; padding: 5px }
             body { background-color: lightgray}
-            #selected {border-radius: 50%; box-shadow: 0px 0px 30px}
+            .selected {border-radius: 50%; box-shadow: 0px 0px 30px}
         </style>
         <script>
+            var randomNumbers = Array()
+            var selectedId
             function createElements(){
                 var myFrame = document.createElement('div')
                 myFrame.id = 'gameFrame'
@@ -15,112 +17,151 @@
                     var myrow = document.createElement('row')
                     for (let j = 0; j < 3; j++){
                         var myImg = document.createElement('img')
-                        myImg.src = "Numbers/"+((i*3)+j+1)+".png"
+                        var randomNumber = random()
+                        myImg.src = "Numbers/"+randomNumber+".png"
                         myImg.width = 150
-                        myImg.name = (i*3) + j+1
-                        myImg.id = j+1
+                        myImg.className = "unselected"
+                        myImg.id = randomNumber
+                        //myImg.id = (i*3) + j+1
                         myImg.onclick = select
                         myrow.appendChild(myImg)
                     }
                     myFrame.appendChild(myrow)
                 }
-                
-                /*var myrow1 = document.createElement('row')
-                var myrow2 = document.createElement('row')
-                var myrow3 = document.createElement('row')
-                
-                
-                var myImg1 = document.createElement('img')
-                myImg1.id = '1'
-                myImg1.src = "Numbers/1.png"
-                myImg1.width = 150
-                myrow1.appendChild(myImg1)
-                
-                var myImg2 = document.createElement('img')
-                myImg1.id = '2'
-                myImg2.src = "Numbers/2.png"
-                myImg2.width = 150
-                myrow1.appendChild(myImg2)
-                
-                var myImg3 = document.createElement('img')
-                myImg1.id = '3'
-                myImg3.src = "Numbers/3.png"
-                myImg3.width = 150
-                myrow1.appendChild(myImg3)
-                
-                var myImg4 = document.createElement('img')
-                myImg1.id = '1'
-                myImg4.src = "Numbers/4.png"
-                myImg4.width = 150
-                myrow2.appendChild(myImg4)
-                
-                var myImg5 = document.createElement('img')
-                myImg1.id = '2'
-                myImg5.src = "Numbers/5.png"
-                myImg5.width = 150
-                myrow2.appendChild(myImg5)
-                
-                var myImg6 = document.createElement('img')
-                myImg1.id = '3'
-                myImg6.src = "Numbers/6.png"
-                myImg6.width = 150
-                myrow2.appendChild(myImg6)
-                
-                var myImg7 = document.createElement('img')
-                myImg1.id = '1'
-                myImg7.src = "Numbers/7.png"
-                myImg7.width = 150
-                myrow3.appendChild(myImg7)
-                
-                var myImg8 = document.createElement('img')
-                myImg1.id = '2'
-                myImg8.src = "Numbers/8.png"
-                myImg8.width = 150
-                myrow3.appendChild(myImg8)
-                
-                var myImg9 = document.createElement('img')
-                myImg1.id = '3'
-                myImg9.src = "Numbers/9.png"
-                myImg9.width = 150
-                myrow3.appendChild(myImg9)
-                
-                myFrame.appendChild(myrow1)
-                myFrame.appendChild(myrow2)
-                myFrame.appendChild(myrow3)*/
                 document.body.appendChild(myFrame)
             }
             
+            function random(){
+                var randomNumber = parseInt(Math.floor(Math.random()*9) + 1)
+                if (randomNumbers.includes(randomNumber)){
+                    return random()
+                } else {
+                    randomNumbers.push(randomNumber)
+                    return randomNumber
+                }
+            }
+            
             function select(){
-                var selected = document.getElementById('selected')
-                if (selected != null){
-                    nextElement = selected.nextSibling
-                    if (nextElement == null){
-                        previousElement = selected.previousSibling
-                        selected.id = parseInt(previousElement.id ) + 1
+                
+                selected = document.getElementsByClassName('selected')
+                if (selected.length != 0){
+                    selectedElement = selected[0]
+                    selectedElement.className = 'unselected'
+                    if (this.id != selectedElement.id) {
+                        this.className = 'selected'
+                        selectedId = this.id
                     } else {
-                        selected.id = parseInt(nextElement.id ) - 1
-                    }
-                    if (this.name != selected.name) {
-                    this.id = 'selected'
+                        selectedId = null
                     }
                 } else {
-                    this.id = 'selected'
+                    this.className = 'selected'
+                    selectedId = this.id
+                }
+            }
+            
+            function move(e) {
+                if (!e) e=window.event;
+                switch(e.keyCode)
+                {
+                case 37:
+                // Key left.
+                moveLeft()
+                break;
+                case 38:
+                // Key up.
+                moveUp()
+                break;
+                case 39:
+                // Key right
+                moveRight()
+                break;
+                case 40:
+                // Key down.
+                moveDown()
+                break;
+                }
+            }
+            
+            function moveLeft(){
+                if(selectedId != null){
+                    selected = document.getElementById(selectedId)
+                    
+                    if (selected.previousSibling != null){
+                        altBox = selected.previousSibling
+                       selected.parentNode.insertBefore(selected, altBox)
+                    } else{
+                    window.alert("You can not move the block to its left.")
+                    }
+                }else {
+                    window.alert("Select a block first, please.")
+                }
+            }
+            
+            function moveRight(){
+                if(selectedId != null){
+                    selected = document.getElementById(selectedId)
+                    
+                    if (selected.nextSibling != null){
+                        altBox = selected.nextSibling
+                        selected.parentNode.insertBefore(altBox, selected)
+                    } else{
+                    window.alert("You can not move the block to its righ.")
+                    }
+                }else {
+                    window.alert("Select a block first, please.")
+                }
+            }
+            
+            function moveUp(){
+                if(selectedId != null){
+                    selected = document.getElementById(selectedId)
+                    parent = selected.parentNode
+                    previousParent = parent.previousSibling
+                    var index = Array.prototype.indexOf.call(parent.children, selected)
+                    
+                    if(previousParent != null){
+                        altBox = previousParent.childNodes[index]
+                        var tempElement
+                        
+                        if (selected.nextSibling != null){
+                            tempElement = selected
+                            parent.insertBefore(altBox, selected.nextSibling)
+                            previousParent.insertBefore(tempElement, previousParent.childNodes[(index)])
+                        } else {
+                            tempElement = selected
+                            parent.insertBefore(altBox, selected)
+                            previousParent.insertBefore(tempElement, previousParent.childNodes[(index)])/*
+                            nextParent.childNodes[index].removeChild()*/
+                        }
+                    }else{
+                        window.alert("You can not move up the block.")
+                    }
+                }else {
+                    window.alert("Select a block first, please.")
                 }
             }
             
             function moveDown(){
-                var selected = document.getElementById('selected')
-                if(selected!=null){
-                    if(selected.parentNode.nextSibling != null){
+                if(selectedId != null){
+                    selected = document.getElementById(selectedId)
+                    parent = selected.parentNode
+                    nextParent = parent.nextSibling
+                    var index = Array.prototype.indexOf.call(parent.children, selected)
+                    
+                    if(nextParent != null){
+                        altBox = nextParent.childNodes[index]
+                        var tempElement
                         
-                        var nextRow = selected.parentNode.nextSibling
-                        
-                        var altBox = 
-                        document.nextRow.getElementById(this.id)
-                        selected.parentnode.replaceChild(selected, altBox)
-                     
-                       altBox.parentNode.replaceChild(altBox, selected) 
-                        
+                        if (selected.nextSibling != null){
+                            tempElement = selected
+                            parent.insertBefore(altBox, selected.nextSibling)
+                            nextParent.insertBefore(tempElement, nextParent.childNodes[(index)])
+                        } else {
+                            tempElement = selected
+                            parent.insertBefore(altBox, selected)
+                            nextParent.insertBefore(tempElement, nextParent.childNodes[(index)])/*
+                            nextParent.childNodes[index].removeChild()*/
+                        }
                     }else{
                         window.alert("You can not move down the block.")
                     }
@@ -132,7 +173,7 @@
             function init() {
                 
                 createElements()
-                onkeydown = moveDown
+                onkeydown = move
 
             }
             
